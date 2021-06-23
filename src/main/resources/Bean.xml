@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+		<bean
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		name="ds">
+
+		<property name="driverClassName"
+			value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/springbootass?useSSL=false"/>
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+
+	</bean>
+
+	<bean id="mysessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+
+		<property name="dataSource" ref="ds"></property>
+		<property name="annotatedClasses">
+			<list>
+
+				<value>com.nagarro.model.User</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+
+		</property>
+	</bean>
+
+
+	<bean id="hibernateTemplate"
+		class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="mysessionFactory"></property>
+	</bean>
+
+
+	<bean id="userDaoImpl" class="com.nagarro.daoimpl.UserDaoImpl">
+		<property name="hTemplate" ref="hibernateTemplate"></property>
+	</bean>
+
+	<bean id="user" class="com.nagarro.model.User"></bean>
+
+	<bean id="employee" class="com.nagarro.model.Employee"></bean>
+
+</beans>
